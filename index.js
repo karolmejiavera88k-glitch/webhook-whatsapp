@@ -4,11 +4,11 @@ const fetch = require("node-fetch");
 const app = express();
 app.use(express.json());
 
-// 🔐 TOKENS SEGUROS (desde Render)
+// 🔐 VARIABLES SEGURAS (Render)
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "12345";
 const TOKEN = process.env.TOKEN;
 
-// 🔹 Verificación webhook
+// 🔹 VERIFICACIÓN WEBHOOK
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -21,11 +21,13 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-// 🔹 Recepción de mensajes
+// 🔹 RECIBIR MENSAJES
 app.post("/webhook", async (req, res) => {
   try {
-    const mensaje = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.text?.body;
-    const numero = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.from;
+    const data = req.body;
+
+    const mensaje = data.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.text?.body;
+    const numero = data.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.from;
 
     const texto = mensaje?.toLowerCase();
 
@@ -36,29 +38,24 @@ app.post("/webhook", async (req, res) => {
 
       let respuesta = "";
 
-      // OPCIÓN 1
+      // 🔹 OPCIONES DEL MENÚ
       if (texto === "1") {
-        respuesta = `📍 *Ferias en Bogotá*
+        respuesta = `📍 Ferias en Bogotá:
 
 🛍️ Centro Comercial Centro Mayor  
 📅 26 marzo - 12 abril  
-⏰ 10am - 8pm
 
 🛍️ Centro Comercial Hayuelos  
-📅 27 marzo - 6 abril  
-⏰ 10am - 8pm`;
+📅 27 marzo - 6 abril`;
       }
 
-      // OPCIÓN 2
       else if (texto === "2") {
-        respuesta = `🌎 *Ferias Nacionales*
+        respuesta = `🌎 Ferias Nacionales:
 
 🛍️ Ibagué - Multicentro  
-📅 21 marzo - 6 abril  
-⏰ 10am - 8pm`;
+📅 21 marzo - 6 abril`;
       }
 
-      // OPCIÓN 3
       else if (texto === "3") {
         respuesta = `🛍️ Pedido en Bogotá
 
@@ -66,7 +63,6 @@ Envíanos:
 Producto + Cantidad + Dirección`;
       }
 
-      // OPCIÓN 4
       else if (texto === "4") {
         respuesta = `🛍️ Pedido en Soacha
 
@@ -74,7 +70,6 @@ Envíanos:
 Producto + Cantidad + Dirección`;
       }
 
-      // OPCIÓN 5
       else if (texto === "5") {
         respuesta = `🛍️ Pedido en Chía
 
@@ -82,7 +77,6 @@ Envíanos:
 Producto + Cantidad + Dirección`;
       }
 
-      // OPCIÓN 6
       else if (texto === "6") {
         respuesta = `🛍️ Pedido en Mosquera, Funza y Madrid
 
@@ -90,36 +84,40 @@ Envíanos:
 Producto + Cantidad + Dirección`;
       }
 
-      // OPCIÓN 7
       else if (texto === "7") {
-        respuesta = `🚚 Envíos a otras ciudades
+        respuesta = `🚚 Pedido en otras ciudades
 
 Envíanos:
 Ciudad + Producto + Cantidad`;
       }
 
-      // OPCIÓN 8
       else if (texto === "8") {
-        respuesta = `👩‍💼 Un asesor te atenderá pronto`;
+        respuesta = `👩‍💼 Un asesor te atenderá en breve 🙌`;
       }
 
-      // MENÚ PRINCIPAL
+      // 🔥 MENSAJE INICIAL → ENVÍA PLANTILLA
       else {
-        respuesta = `Hola 👋 Bienvenido a Dulces de Leche Meve 🍯
+        await fetch("https://graph.facebook.com/v22.0/1018727891330007/messages", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${TOKEN}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            messaging_product: "whatsapp",
+            to: numero,
+            type: "template",
+            template: {
+              name: "saludo_cliente", // 👈 nombre exacto en Meta
+              language: { code: "es_CO" }
+            }
+          })
+        });
 
-Elige una opción:
-
-1️⃣ Ferias Bogotá  
-2️⃣ Ferias Nacional  
-3️⃣ Pedido Bogotá  
-4️⃣ Pedido Soacha  
-5️⃣ Pedido Chía  
-6️⃣ Pedido Mosquera/Funza/Madrid  
-7️⃣ Otras ciudades  
-8️⃣ Asesor`;
+        return res.sendStatus(200);
       }
 
-      // 🔹 ENVÍO A WHATSAPP
+      // 🔹 RESPUESTA NORMAL
       await fetch("https://graph.facebook.com/v22.0/1018727891330007/messages", {
         method: "POST",
         headers: {
@@ -143,6 +141,6 @@ Elige una opción:
   }
 });
 
-// 🔹 Servidor
+// 🔹 SERVIDOR
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Servidor listo 🚀"));
