@@ -4,7 +4,7 @@ const fetch = require("node-fetch");
 const app = express();
 app.use(express.json());
 
-// 🔐 VARIABLES SEGURAS (Render)
+// 🔐 VARIABLES
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "12345";
 const TOKEN = process.env.TOKEN;
 
@@ -38,61 +38,104 @@ app.post("/webhook", async (req, res) => {
 
       let respuesta = "";
 
-      // 🔹 OPCIONES DEL MENÚ
+      // 🔹 OPCIÓN 1 - BOGOTÁ
       if (texto === "1") {
-        respuesta = `📍 Ferias en Bogotá:
+        respuesta = `📍 *Ferias en Bogotá*
 
-🛍️ Centro Comercial Centro Mayor  
-📅 26 marzo - 12 abril  
+🛍️ *Centro Comercial Centro Mayor*  
+📍 Plazoleta principal  
+📅 26 de marzo al 12 de abril  
+⏰ 10:00 a.m. a 8:00 p.m.
 
-🛍️ Centro Comercial Hayuelos  
-📅 27 marzo - 6 abril`;
+🛍️ *Centro Comercial Hayuelos*  
+📍 Frente a almacén KEVIN'S  
+📅 27 de marzo al 6 de abril  
+⏰ 10:00 a.m. a 8:00 p.m.
+
+👉 ¡Te esperamos! También puedes hacer tu pedido por aquí 😊`;
       }
 
+      // 🔹 OPCIÓN 2 - NACIONAL
       else if (texto === "2") {
-        respuesta = `🌎 Ferias Nacionales:
+        respuesta = `🌎 *Ferias a nivel nacional*
 
-🛍️ Ibagué - Multicentro  
-📅 21 marzo - 6 abril`;
+🛍️ *Ibagué - Centro Comercial Multicentro*  
+📍 Segundo piso, frente a Banco AV Villas  
+📅 21 de marzo al 6 de abril  
+⏰ 10:00 a.m. a 8:00 p.m.
+
+👉 ¿Te gustaría visitarnos o prefieres hacer tu pedido por aquí? 😊`;
       }
 
+      // 🔹 OPCIÓN 3
       else if (texto === "3") {
-        respuesta = `🛍️ Pedido en Bogotá
+        respuesta = `🛍️ *Pedido en Bogotá*
 
 Envíanos:
-Producto + Cantidad + Dirección`;
+👉 Producto  
+👉 Cantidad  
+👉 Dirección  
+
+y te ayudamos con tu pedido 💛`;
       }
 
+      // 🔹 OPCIÓN 4
       else if (texto === "4") {
-        respuesta = `🛍️ Pedido en Soacha
+        respuesta = `🛍️ *Pedido en Soacha*
 
 Envíanos:
-Producto + Cantidad + Dirección`;
+👉 Producto  
+👉 Cantidad  
+👉 Dirección  
+
+y coordinamos tu pedido 🚚`;
       }
 
+      // 🔹 OPCIÓN 5
       else if (texto === "5") {
-        respuesta = `🛍️ Pedido en Chía
+        respuesta = `🛍️ *Pedido en Chía*
 
-Envíanos:
-Producto + Cantidad + Dirección`;
+Dinos:
+👉 Producto  
+👉 Cantidad  
+👉 Dirección  
+
+y te cotizamos envío 💛`;
       }
 
+      // 🔹 OPCIÓN 6
       else if (texto === "6") {
-        respuesta = `🛍️ Pedido en Mosquera, Funza y Madrid
+        respuesta = `🛍️ *Pedido en Mosquera, Funza y Madrid*
 
 Envíanos:
-Producto + Cantidad + Dirección`;
+👉 Producto  
+👉 Cantidad  
+👉 Dirección  
+
+y te confirmamos disponibilidad 🚚`;
       }
 
+      // 🔹 OPCIÓN 7
       else if (texto === "7") {
-        respuesta = `🚚 Pedido en otras ciudades
+        respuesta = `🚚 *Pedido en otras ciudades*
 
-Envíanos:
-Ciudad + Producto + Cantidad`;
+Hacemos envíos a nivel nacional 🇨🇴
+
+Escríbenos:
+👉 Ciudad  
+👉 Producto  
+👉 Cantidad  
+
+y te damos el valor del envío 📦`;
       }
 
+      // 🔹 OPCIÓN 8
       else if (texto === "8") {
-        respuesta = `👩‍💼 Un asesor te atenderá en breve 🙌`;
+        respuesta = `👩‍💼 *Asesor*
+
+Un asesor te atenderá en breve 🙌
+
+También puedes escribir tu pedido directamente aquí`;
       }
 
       // 🔥 MENSAJE INICIAL → ENVÍA PLANTILLA
@@ -108,7 +151,7 @@ Ciudad + Producto + Cantidad`;
             to: numero,
             type: "template",
             template: {
-              name: "saludo_cliente", // 👈 nombre exacto en Meta
+              name: "saludo_cliente",
               language: { code: "es_CO" }
             }
           })
