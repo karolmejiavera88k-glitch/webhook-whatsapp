@@ -4,9 +4,10 @@ const fetch = require("node-fetch");
 const app = express();
 app.use(express.json());
 
-// 🔐 VARIABLES
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "12345";
-const TOKEN = process.env.TOKEN;
+// 🔐 CONFIGURACIÓN
+const VERIFY_TOKEN = "12345";
+
+const TOKEN = "EAAKWtJ1ySJABQZBkDjYFaRqVd3yrbZBP6bczuovM3ZCX2ztQXHc4JLuDGjk8kGbiO4h5wFPLq4XxLSzQYOnvgBPj34RuSrQjZAsk4iYd3IAr2Kjq5IXPfRAA6RtxfqSin10IVIlRZByoJSpFOuD3eyl9ELSFndzHfhqv1dxBndCUkHKyGVN3tozDgOfhTyBbo7DTXZAVhZBoQdZCpZCRfZAXqDaj09hitBQjo25t4FhkCMJofWi2yb6CZACT7pHXLOi7zcHlVnJeRUY8ijp6m5ZCg2QdCyPIuRa9rcIxDhV7BAZDZD";
 
 // 🔹 VERIFICACIÓN WEBHOOK
 app.get("/webhook", (req, res) => {
@@ -55,16 +56,14 @@ app.post("/webhook", async (req, res) => {
 👉 ¡Te esperamos! También puedes hacer tu pedido por aquí 😊`;
       }
 
-      // 🔹 OPCIÓN 2 - NACIONAL
+      // 🔹 OPCIÓN 2
       else if (texto === "2") {
         respuesta = `🌎 *Ferias a nivel nacional*
 
 🛍️ *Ibagué - Centro Comercial Multicentro*  
 📍 Segundo piso, frente a Banco AV Villas  
 📅 21 de marzo al 6 de abril  
-⏰ 10:00 a.m. a 8:00 p.m.
-
-👉 ¿Te gustaría visitarnos o prefieres hacer tu pedido por aquí? 😊`;
+⏰ 10:00 a.m. a 8:00 p.m.`;
       }
 
       // 🔹 OPCIÓN 3
@@ -74,9 +73,7 @@ app.post("/webhook", async (req, res) => {
 Envíanos:
 👉 Producto  
 👉 Cantidad  
-👉 Dirección  
-
-y te ayudamos con tu pedido 💛`;
+👉 Dirección`;
       }
 
       // 🔹 OPCIÓN 4
@@ -86,21 +83,17 @@ y te ayudamos con tu pedido 💛`;
 Envíanos:
 👉 Producto  
 👉 Cantidad  
-👉 Dirección  
-
-y coordinamos tu pedido 🚚`;
+👉 Dirección`;
       }
 
       // 🔹 OPCIÓN 5
       else if (texto === "5") {
         respuesta = `🛍️ *Pedido en Chía*
 
-Dinos:
+Envíanos:
 👉 Producto  
 👉 Cantidad  
-👉 Dirección  
-
-y te cotizamos envío 💛`;
+👉 Dirección`;
       }
 
       // 🔹 OPCIÓN 6
@@ -110,35 +103,25 @@ y te cotizamos envío 💛`;
 Envíanos:
 👉 Producto  
 👉 Cantidad  
-👉 Dirección  
-
-y te confirmamos disponibilidad 🚚`;
+👉 Dirección`;
       }
 
       // 🔹 OPCIÓN 7
       else if (texto === "7") {
         respuesta = `🚚 *Pedido en otras ciudades*
 
-Hacemos envíos a nivel nacional 🇨🇴
-
-Escríbenos:
+Envíanos:
 👉 Ciudad  
 👉 Producto  
-👉 Cantidad  
-
-y te damos el valor del envío 📦`;
+👉 Cantidad`;
       }
 
       // 🔹 OPCIÓN 8
       else if (texto === "8") {
-        respuesta = `👩‍💼 *Asesor*
-
-Un asesor te atenderá en breve 🙌
-
-También puedes escribir tu pedido directamente aquí`;
+        respuesta = `👩‍💼 Un asesor te atenderá en breve 🙌`;
       }
 
-      // 🔥 MENSAJE INICIAL → ENVÍA PLANTILLA
+      // 🔥 MENSAJE INICIAL (PLANTILLA)
       else {
         await fetch("https://graph.facebook.com/v22.0/1018727891330007/messages", {
           method: "POST",
@@ -185,5 +168,4 @@ También puedes escribir tu pedido directamente aquí`;
 });
 
 // 🔹 SERVIDOR
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Servidor listo 🚀"));
+app.listen(3000, () => console.log("Servidor listo 🚀"));
